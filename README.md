@@ -82,4 +82,4 @@ Finally, use the other password and `pulumi up`, then you should be able to conn
 
 ## That's all folks
 
-Now procees to branch sequence-02
+Now procees to branch sequence-03
