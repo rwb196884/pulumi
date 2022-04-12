@@ -2,3 +2,7 @@ config:
   azure-native:location: uksouth
   rwb196884:ApplicationName: rwb
   rwb196884:EnvironmentName: dev
+  rwb196884:AzureTenantId: 00000000-0000-0000-0000-000000000000 # Find out your real value!
+  rwb196884:AzurePrincipalId: 00000000-0000-0000-0000-000000000000
+  rwb196884:SqlServerAdminPassword:
+    secure: AAABAEy34ZP6OzdMuwlpjohgiJzs8cMIGBY+iAYRmY4vFl205vfaj/Zy5V7DgV4LKWVJRNwe3i90xpohayy99lx9+g==

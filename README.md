@@ -80,6 +80,25 @@ pulumi destroy dev
 
 Finally, use the other password and `pulumi up`, then you should be able to connecto the database in SQL Server Management Studio.
 
+## 03 Secrets
+
+I suppose you don't like that SQL Server administrator password hard-coded in the source and in the repository?
+Well we can put it in the confih `yml` file encrypted instead:
+```
+> pulumi config set --secret SqlServerAdminPassword ql-Server-Admin-Password-123-secret
+```
+and then
+```
+Output<string> administratorLoginPassword = config.RequireSecret("SqlServerAdminPassword");
+```
+The type has changed from `string` to `Output<string>` which means that you can't actually see the value -- pretty useless.
+
+We want to make a connection string for the new database and store it in a keyvault so that we can use it later.
+We can make the key vault, but not the connection string.
+
+To make a keyvault you need your Azure tenant ID which can be obtained by running `az tenant list`, and the GUID of a user or group to whom to allow access.
+To obtain the GUID of the user/group click about in the Azure website and hope to get lucky.
+
 ## That's all folks
 
 Now procees to branch sequence-03
