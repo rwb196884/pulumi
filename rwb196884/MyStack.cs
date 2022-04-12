@@ -3,7 +3,7 @@ using System.Net;
 using Resources = Pulumi.AzureNative.Resources;
 using Sql = Pulumi.AzureNative.Sql;
 
-class MyStack : Stack
+namespace rwb196884
 {
     private const string PulumiProject = "rwb196884";
 
