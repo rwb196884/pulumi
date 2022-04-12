@@ -50,6 +50,8 @@ Open the NuGet package manager, remove the redundant reference to `Pulimi`
 (it is a depencency of `Pulumi.AzureNative`) and update `Pulumi.AzureNative`
 to the latest version (1.62.0 at the time of writing). It will now build.
 
+Add a `namespace` to `Program.cs` and `MyStack.cs`.
+
 We can see that `Console.Writeline` and `Pulumi.Log.Info` both produce output
 which can be seen both in the DOS window when running the `pulumi` command
 and inthe Pulumi website.
