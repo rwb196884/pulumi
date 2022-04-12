@@ -1,7 +1,10 @@
 ﻿using System.Threading.Tasks;
 using Pulumi;
 
-class Program
+namespace rwb196884
 {
-    static Task<int> Main() => Deployment.RunAsync<MyStack>();
+    class Program
+    {
+        static Task<int> Main() => Deployment.RunAsync<MyStack>();
+    }
 }

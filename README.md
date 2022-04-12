@@ -50,6 +50,8 @@ Open the NuGet package manager, remove the redundant reference to `Pulimi`
 (it is a depencency of `Pulumi.AzureNative`) and update `Pulumi.AzureNative`
 to the latest version (1.62.0 at the time of writing). It will now build.
 
+Add a `namespace` to `Program.cs` and `MyStack.cs`.
+
 We can see that `Console.Writeline` and `Pulumi.Log.Info` both produce output
 which can be seen both in the DOS window when running the `pulumi` command
 and inthe Pulumi website.
@@ -91,13 +93,16 @@ and then
 ```
 Output<string> administratorLoginPassword = config.RequireSecret("SqlServerAdminPassword");
 ```
-The type has changed from `string` to `Output<string>` which means that you can't actually see the value -- pretty useless.
 
-We want to make a connection string for the new database and store it in a keyvault so that we can use it later.
-We can make the key vault, but not the connection string.
+At this point if you `pulumi up` then you can verify in SQL Server Management studio that the password has changed to the new value.
+
+The database is useless if nobody can connect to it, so make a key vault to store the connection string.
 
 To make a keyvault you need your Azure tenant ID which can be obtained by running `az tenant list`, and the GUID of a user or group to whom to allow access.
 To obtain the GUID of the user/group click about in the Azure website and hope to get lucky.
+
+Unfortunately the password has changed type from `string` to `Output<string>` which is useless.
+
 
 ## That's all folks
 
