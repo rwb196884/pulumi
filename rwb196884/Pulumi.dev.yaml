@@ -1,2 +1,4 @@
 config:
   azure-native:location: uksouth
+  rwb196884:ApplicationName: rwb
+  rwb196884:EnvironmentName: dev

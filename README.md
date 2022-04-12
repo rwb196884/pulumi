@@ -56,6 +56,30 @@ and inthe Pulumi website.
 This is likely to be useful for debugging becauase the programme is not really 
 a programme and can't be run let alone debugged in VisualStudio.
 
+## 02 SQL Server
+
+Let's create a _resource_!
+
+At this point we need domain knowledge about Azure in order to know what things to create, 
+what additional things to create because the things we want depend on them,
+and a load of annoying 'security' stuff that prevents things from working to work around.
+In this sense the _no domain specific language_ boast is something of a red herring.
+
+Add some configuration values to the _stack_ (the `yml` file) and use the `Config` object to get their values.
+
+Configuration items are key-value pairs. The key is of the format `foo:bar`, and we can only read values where `foo` is the project name
+(so in this case `foo` must be `rwb196884`).
+
+If we use an invalid password to create the SQL Server _resource_ then Pulumi still craetes the resource group; it does not tidy up after an error.
+
+Deleting the resource group in the Azure website will confuse Pulumi.
+The only possibility is to completely delete the stack and start over.
+```
+pulumi destroy dev
+```
+
+Finally, use the other password and `pulumi up`, then you should be able to connecto the database in SQL Server Management Studio.
+
 ## That's all folks
 
 Now procees to branch sequence-02

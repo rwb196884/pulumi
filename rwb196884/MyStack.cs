@@ -1,14 +1,63 @@
 using Pulumi;
-using System;
-using System.Diagnostics;
+using System.Net;
+using Resources = Pulumi.AzureNative.Resources;
+using Sql = Pulumi.AzureNative.Sql;
 
 class MyStack : Stack
 {
+    private const string PulumiProject = "rwb196884";
+
+    private static string GetExternalIP()
+    {
+        string externalIpString = new WebClient().DownloadString("http://icanhazip.com").Replace("\\r\\n", "").Replace("\\n", "").Trim();
+        Pulumi.Log.Info($"GetExternalIP is {externalIpString}.");
+        return IPAddress.Parse(externalIpString).ToString(); // Parse it to check that it's valid.
+    }
+
     public MyStack()
     {
-        Console.WriteLine("Hello World from Console.WriteLine."); // Outputs on `pulumi up` and into the log at https://app.pulumi.com/.../rwb196884/dev/updates/1.
-        Debug.WriteLine("Hello World from Console.WriteLine."); // Doesn't do anything.
-        Pulumi.Log.Info("Hello World from Pulumi.Log.Info."); // Outputs on `pulumi up` and into the log at https://app.pulumi.com/.../rwb196884/dev/updates/1
+        // Read the yml file for the stack.
+        Config config = new Pulumi.Config();
+
+        string applicationName = config.Require("ApplicationName");
+        string environmentName = config.Require("EnvironmentName");
+        //string loc = config.Require("azure-native:location");
+        // It seems that we can only read configuration values that start with 'rwb196884' and to do so we must omit the prefix.
+
+        Pulumi.Log.Info($"ApplicationName is {applicationName}.");
+        Pulumi.Log.Info($"EnvironmentName is {environmentName}.");
+
+        string ae = $"{applicationName}-{environmentName}";
+
+        // Create an Azure Resource Group
+        Resources.ResourceGroup? resourceGroup = new Resources.ResourceGroup($"{PulumiProject}-{ae}-resource-group");
+        // We'll do everything in here so it's easy to find in the Azure website and delete it when we're done.
+
+        //string administratorLoginPassword = "SqlServerAdminPassword"; // This will fail because the password doesn't meet the policy. But the resource group is still created; pulumi does not tidy up after an error.
+        string administratorLoginPassword = "Sql-Server-Admin-Password-123";
+        Sql.Server sqlServer = new Sql.Server($"{PulumiProject}-{ae}-sql-server", new Sql.ServerArgs()
+        {
+            ResourceGroupName = resourceGroup.Name,
+            AdministratorLogin = "rwb",
+            AdministratorLoginPassword = administratorLoginPassword
+        });
+
+        string ip = GetExternalIP();
+        Sql.FirewallRule firewallRule = new Sql.FirewallRule("rwb_2022-04-12", new Sql.FirewallRuleArgs()
+        {
+            ResourceGroupName = resourceGroup.Name,
+            ServerName = sqlServer.Name,
+            StartIpAddress = ip,
+            EndIpAddress = ip,
+
+        });
+
+        // Create a database.
+        Sql.Database database = new Sql.Database($"{PulumiProject}-{ae}-sql-database", new Pulumi.AzureNative.Sql.DatabaseArgs()
+        {
+            ResourceGroupName = resourceGroup.Name,
+            ServerName = sqlServer.Name,
+        });
 
 
         //// Create an Azure Resource Group
